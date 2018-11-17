@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: kubesphere
+    component: ks-docs-sample-dev
+    tier: backend
+  name: ks-docs-sample-dev
+  namespace: kubesphere-system-dev
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kubesphere
+      component: ks-docs-sample-dev
+      tier: backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: kubesphere
+        component: ks-docs-sample-dev
+        tier: backend
+    spec:
+      containers:
+      - env:
+        - name: CACHE_IGNORE
+          value: js|html
+        - name: CACHE_PUBLIC_EXPIRATION
+          value: 3d
+        image: $ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER
+        imagePullPolicy: Always
+        name: ks-docs
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 500Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
