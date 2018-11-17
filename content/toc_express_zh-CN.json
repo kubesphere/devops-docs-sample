@@ -1,0 +1,109 @@
+{
+  "id": "express-zh-CN",
+  "chapters": [
+    {
+      "title": "简介",
+      "entry": "./express/zh-CN/basic.md"
+    },
+    {
+      "title": "安装指南",
+      "entry": "./express/zh-CN/KubeSphere-Installer-Guide.md"
+    },
+    {
+      "title": "快速入门",
+      "entry": "./express/zh-CN/user-case.md"
+    },
+    {
+      "title": "用户指南",
+      "chapters": [
+        {
+          "title": "首页",
+          "entry": "./express/zh-CN/homepage.md"
+        },
+        {
+          "title": "应用负载",
+          "entries": [
+            {
+              "entry": "./express/zh-CN/manage-deployments.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-statefulsets.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-daemonsets.md"
+            }
+          ]
+        },
+        {
+          "title": "服务与网络",
+          "entries": [
+            {
+              "entry": "./express/zh-CN/manage-services.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-routers.md"
+            }
+          ]
+        },
+        {
+          "title": "应用管理",
+          "entries": [
+            {
+              "entry": "./express/zh-CN/manage-applications.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-repo.md"
+            }
+          ]
+        },
+        {
+          "title": "资源管理",
+          "entries": [
+            {
+              "entry": "./express/zh-CN/manage-imageregistries.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-storages.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-storageclasses.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-nodes.md"
+            }
+          ]
+        },
+        {
+          "title": "平台管理",
+          "entries": [
+            {
+              "entry": "./express/zh-CN/manage-projects.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-roles.md"
+            },
+            {
+              "entry": "./express/zh-CN/manage-users.md"
+            },
+            {
+              "entry": "./express/zh-CN/service-components.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "附录",
+      "chapters": [
+        {
+          "title": "部署 Ceph 存储集群",
+          "entry": "./express/zh-CN/ceph-ks-install.md"
+        },
+        {
+          "title": "部署 GlusterFS 存储集群",
+          "entry": "./express/zh-CN/glusterfs-ks-install.md"
+        }
+      ]
+    }
+  ]
+}
