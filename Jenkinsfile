@@ -4,6 +4,9 @@ pipeline {
       label 'nodejs'
     }
   }
+  parameters{
+     string(name:'TAG_NAME',defaultValue: '',description:'')
+  }
   environment {
     ORG = 'runzexia'
     APP_NAME = 'devops-docs-sample'
@@ -39,6 +42,9 @@ pipeline {
       }
     }
     stage('build & push snapshot docker image ') {
+      when{
+        branch 'master'
+      }
       steps {
         container('nodejs') {
           sh 'docker build -t docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
@@ -46,19 +52,55 @@ pipeline {
             sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
             sh 'docker push  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER '
           }
-
         }
 
       }
     }
+    stage('push latest image'){
+       container('nodejs'){
+       sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:latest '
+       sh 'docker push  docker.io/$ORG/$APP_NAME:latest '
+       }
+    }
     stage('deploy to dev?') {
+      when{
+        branch 'master'
+      }
       steps {
         input(id: 'deploy-to-dev', message: 'deploy to dev?')
       }
     }
     stage('deploy to dev') {
+      when{
+        branch 'master'
+      }
       steps {
         kubernetesDeploy(configs: 'deploy/dev/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
+      }
+    }
+    stage('push image with tag'){
+        when{
+            tag 'v*'
+        }
+        steps {
+           sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:$TAG_NAME '
+           sh 'docker push  docker.io/$ORG/$APP_NAME:$TAG_NAME '
+        }
+    }
+    stage('deploy to production?') {
+      when{
+        tag 'v*'
+      }
+      steps {
+        input(id: 'deploy-to-production', message: 'deploy to production?')
+      }
+    }
+    stage('deploy to production') {
+      when{
+        tag 'v*'
+      }
+      steps {
+        kubernetesDeploy(configs: 'deploy/production/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
       }
     }
   }
