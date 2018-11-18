@@ -83,6 +83,14 @@ pipeline {
         kubernetesDeploy(configs: 'deploy/dev/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
       }
     }
+    stage('release image with tag?'){
+        when{
+            tag 'v*'
+        }
+      steps {
+        input(id: 'release-image-with-tag', message: 'release image with tag?')
+      }
+    }
     stage('push image with tag'){
         when{
             tag 'v*'
