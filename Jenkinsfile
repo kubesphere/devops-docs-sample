@@ -57,9 +57,14 @@ pipeline {
       }
     }
     stage('push latest image'){
-       container('nodejs'){
-       sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:latest '
-       sh 'docker push  docker.io/$ORG/$APP_NAME:latest '
+       when{
+         branch 'master'
+       }
+       steps{
+         container('nodejs'){
+           sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:latest '
+           sh 'docker push  docker.io/$ORG/$APP_NAME:latest '
+         }
        }
     }
     stage('deploy to dev?') {
@@ -83,8 +88,10 @@ pipeline {
             tag 'v*'
         }
         steps {
+           container('nodejs'){
            sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:$TAG_NAME '
            sh 'docker push  docker.io/$ORG/$APP_NAME:$TAG_NAME '
+           }
         }
     }
     stage('deploy to production?') {
