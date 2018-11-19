@@ -74,7 +74,7 @@ pipeline {
            container('nodejs'){
            input(id: 'release-image-with-tag', message: 'release image with tag?')
            withCredentials([usernamePassword(credentialsId: 'git', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-               sh '''git config --global user.email "runzexia@yunify.com
+               sh '''git config --global user.email "runzexia@yunify.com"
                   git config --global user.name "runzexia"
                   git remote rm origin
                   git remote add origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$ORG/$APP_NAME.git'''
