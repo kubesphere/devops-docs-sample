@@ -34,9 +34,6 @@ pipeline {
       }
     }
     stage('build & push snapshot image ') {
-      when{
-        branch 'master'
-      }
       steps {
         container('nodejs') {
           sh 'yarn build'
