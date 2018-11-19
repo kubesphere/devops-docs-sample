@@ -90,6 +90,10 @@ pipeline {
         }
         steps {
            container('nodejs'){
+           withCredentials([usernamePassword(credentialsId: 'git', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+               sh("git tag -a $TAG_NAME -m '$TAG_NAME'")
+               sh('git push origin --tags')
+           }
            sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:$TAG_NAME '
            sh 'docker push  docker.io/$ORG/$APP_NAME:$TAG_NAME '
            }
