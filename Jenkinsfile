@@ -57,28 +57,13 @@ pipeline {
          }
        }
     }
-    stage('deploy to dev?') {
-      when{
-        branch 'master'
-      }
-      steps {
-        input(id: 'deploy-to-dev', message: 'deploy to dev?')
-      }
-    }
     stage('deploy to dev') {
       when{
         branch 'master'
       }
       steps {
+        input(id: 'deploy-to-dev', message: 'deploy to dev?')
         kubernetesDeploy(configs: 'deploy/dev/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
-      }
-    }
-    stage('release image with tag?'){
-        when{
-            tag 'v*'
-        }
-      steps {
-        input(id: 'release-image-with-tag', message: 'release image with tag?')
       }
     }
     stage('push image with tag'){
@@ -87,9 +72,11 @@ pipeline {
         }
         steps {
            container('nodejs'){
+           input(id: 'release-image-with-tag', message: 'release image with tag?')
            withCredentials([usernamePassword(credentialsId: 'git', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                sh('git config --global user.email "runzexia@yunify.com" ')
                sh('git config --global user.name "runzexia" ' )
+               sh('git remote add origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$ORG/$APP_NAME.git')
                sh('git tag -a $TAG_NAME -m "$TAG_NAME" ')
                sh('git push origin --tags')
            }
@@ -98,19 +85,12 @@ pipeline {
            }
         }
     }
-    stage('deploy to production?') {
-      when{
-        tag 'v*'
-      }
-      steps {
-        input(id: 'deploy-to-production', message: 'deploy to production?')
-      }
-    }
     stage('deploy to production') {
       when{
         tag 'v*'
       }
       steps {
+        input(id: 'deploy-to-production', message: 'deploy to production?')
         kubernetesDeploy(configs: 'deploy/production/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
       }
     }
