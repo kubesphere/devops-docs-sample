@@ -33,20 +33,13 @@ pipeline {
 
       }
     }
-    stage('yarn build') {
-      steps {
-        container('nodejs') {
-          sh 'yarn build'
-        }
-
-      }
-    }
     stage('build & push snapshot image ') {
       when{
         branch 'master'
       }
       steps {
         container('nodejs') {
+          sh 'yarn build'
           sh 'docker build -t docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : 'dockerhub' ,)]) {
             sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
