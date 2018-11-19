@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kubesphere
+    component: ks-docs-sample
+  name: ks-docs-sample
+  namespace: kubesphere-system
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30980
+  selector:
+    app: kubesphere
+    component: ks-docs-sample
+    tier: backend
+  sessionAffinity: None
+  type: NodePort
