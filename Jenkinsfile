@@ -8,7 +8,7 @@ pipeline {
      string(name:'TAG_NAME',defaultValue: '',description:'')
   }
   environment {
-    ORG = 'runzexia'
+    ORG = 'kubesphere'
     APP_NAME = 'devops-docs-sample'
   }
   stages {
@@ -33,7 +33,7 @@ pipeline {
 
       }
     }
-    stage('build & push snapshot image ') {
+    stage('build & push snapshot') {
       steps {
         container('nodejs') {
           sh 'yarn build'
@@ -46,7 +46,7 @@ pipeline {
 
       }
     }
-    stage('push latest image'){
+    stage('push latest'){
        when{
          branch 'master'
        }
@@ -66,7 +66,7 @@ pipeline {
         kubernetesDeploy(configs: 'deploy/dev/**', enableConfigSubstitution: true, kubeconfigId: 'kubeconfig')
       }
     }
-    stage('push image with tag'){
+    stage('push with tag'){
         when{
             tag 'v*'
         }
