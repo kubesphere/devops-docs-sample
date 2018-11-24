@@ -9,6 +9,7 @@ pipeline {
   }
   environment {
     ORG = 'kubesphere'
+    GITHUB_ORG = 'kubesphere'
     APP_NAME = 'devops-docs-sample'
   }
   stages {
@@ -74,8 +75,10 @@ pipeline {
            container('nodejs'){
            input(id: 'release-image-with-tag', message: 'release image with tag?')
            withCredentials([usernamePassword(credentialsId: 'git', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+               sh 'git config --global user.email "your-email" '
+               sh 'git config --global user.name "your-github-name" '
                sh 'git tag -a $TAG_NAME -m "$TAG_NAME" '
-               sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$ORG/$APP_NAME.git --tags'
+               sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GITHUB_ORG/$APP_NAME.git --tags'
            }
            sh 'docker tag  docker.io/$ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$ORG/$APP_NAME:$TAG_NAME '
            sh 'docker push  docker.io/$ORG/$APP_NAME:$TAG_NAME '
