@@ -28,7 +28,7 @@ spec:
           value: js|html
         - name: CACHE_PUBLIC_EXPIRATION
           value: 3d
-        image: $ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER
+        image: $DOCKERHUB_ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER
         imagePullPolicy: Always
         name: ks-docs
         ports:

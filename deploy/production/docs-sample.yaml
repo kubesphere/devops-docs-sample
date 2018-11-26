@@ -33,7 +33,7 @@ spec:
           value: js|html
         - name: CACHE_PUBLIC_EXPIRATION
           value: 3d
-        image: $ORG/$APP_NAME:$TAG_NAME
+        image: $DOCKERHUB_ORG/$APP_NAME:$TAG_NAME
         imagePullPolicy: Always
         name: ks-docs
         ports:
