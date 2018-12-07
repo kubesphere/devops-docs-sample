@@ -11,8 +11,8 @@ pipeline {
     DOCKERHUB_CREDENTIAL_ID = 'dockerhub-id'
     GITHUB_CREDENTIAL_ID = 'github-id'
     KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
-    DOCKERHUB_ORG = 'kubesphere'
-    GITHUB_ORG = 'kubesphere'
+    DOCKERHUB_NAMESPACE = 'kubesphere'
+    GTIHUB_ACCOUNT = 'kubesphere'
     APP_NAME = 'devops-docs-sample'
   }
   stages {
@@ -41,10 +41,10 @@ pipeline {
       steps {
         container('nodejs') {
           sh 'yarn build'
-          sh 'docker build -t docker.io/$DOCKERHUB_ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
+          sh 'docker build -t docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : "$DOCKERHUB_CREDENTIAL_ID" ,)]) {
             sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-            sh 'docker push  docker.io/$DOCKERHUB_ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER '
+            sh 'docker push  docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER '
           }
         }
 
@@ -56,8 +56,8 @@ pipeline {
        }
        steps{
          container('nodejs'){
-           sh 'docker tag  docker.io/$DOCKERHUB_ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$DOCKERHUB_ORG/$APP_NAME:latest '
-           sh 'docker push  docker.io/$DOCKERHUB_ORG/$APP_NAME:latest '
+           sh 'docker tag  docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:latest '
+           sh 'docker push  docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:latest '
          }
        }
     }
@@ -81,10 +81,10 @@ pipeline {
                sh 'git config --global user.email "kubesphere@yunify.com" '
                sh 'git config --global user.name "kubesphere" '
                sh 'git tag -a $TAG_NAME -m "$TAG_NAME" '
-               sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GITHUB_ORG/$APP_NAME.git --tags'
+               sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GTIHUB_ACCOUNT/$APP_NAME.git --tags'
            }
-           sh 'docker tag  docker.io/$DOCKERHUB_ORG/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$DOCKERHUB_ORG/$APP_NAME:$TAG_NAME '
-           sh 'docker push  docker.io/$DOCKERHUB_ORG/$APP_NAME:$TAG_NAME '
+           sh 'docker tag  docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME '
+           sh 'docker push  docker.io/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME '
            }
         }
     }
