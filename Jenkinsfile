@@ -24,7 +24,7 @@ pipeline {
     stage('get dependencies') {
       steps {
         container('nodejs') {
-          sh 'yarn config set registry 'https://registry.npm.taobao.org'
+          sh 'yarn config set registry https://registry.npm.taobao.org'
           sh 'yarn install --no-lockfile'
         }
 
