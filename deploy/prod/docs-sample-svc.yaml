@@ -5,7 +5,7 @@ metadata:
     app: kubesphere
     component: ks-docs-sample
   name: ks-docs-sample
-  namespace: kubesphere-system-prod
+  namespace: kubesphere-docs-prod
 spec:
   ports:
   - name: http
